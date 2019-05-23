@@ -40,4 +40,5 @@ public class VIForegroundService extends Service {
         return START_NOT_STICKY;
 
     }
+
 }

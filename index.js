@@ -4,7 +4,7 @@
 
 'use strict';
 
-import { NativeModules } from 'react-native';
+import {NativeModules} from 'react-native';
 
 const ForegroundServiceModule = NativeModules.VIForegroundService;
 
@@ -21,9 +21,7 @@ const ForegroundServiceModule = NativeModules.VIForegroundService;
  *                              1 - PRIORITY_HIGH,
  *                              2- PRIORITY_MAX
  */
-const NotificationConfig = {
-
-};
+const NotificationConfig = {};
 
 /**
  * @property {string} id - Unique channel ID
@@ -37,38 +35,45 @@ const NotificationConfig = {
  *                                   5 - 'max'.
  * @property {boolean} [enableVibration] - Sets whether notification posted to this channel should vibrate. False by default.
  */
-const NotificationChannelConfig = {
-
-};
+const NotificationChannelConfig = {};
 
 export default class VIForegroundService {
-    /**
-     * Create notification channel for foreground service
-     *
-     * @param {NotificationChannelConfig} channelConfig - Notification channel configuration
-     * @return Promise
-     */
-    static async createNotificationChannel(channelConfig) {
-        return await ForegroundServiceModule.createNotificationChannel(channelConfig);
-    }
+  /**
+   * Create notification channel for foreground service
+   *
+   * @param {NotificationChannelConfig} channelConfig - Notification channel configuration
+   * @return Promise
+   */
+  static async createNotificationChannel(channelConfig) {
+    return await ForegroundServiceModule.createNotificationChannel(
+      channelConfig,
+    );
+  }
 
-    /**
-     * Start foreground service
-     * @param {NotificationConfig} notificationConfig - Notification config
-     * @return Promise
-     */
-    static async startService(notificationConfig) {
-        return await ForegroundServiceModule.startService(notificationConfig);
-    }
+  /**
+   * Start foreground service
+   * @param {NotificationConfig} notificationConfig - Notification config
+   * @return Promise
+   */
+  static async startService(notificationConfig) {
+    return await ForegroundServiceModule.startService(notificationConfig);
+  }
 
-    /**
-     * Stop foreground service
-     *
-     * @return Promise
-     */
-    static async stopService() {
-        return await ForegroundServiceModule.stopService();
-    }
+  /**
+   * Update notification content text
+   * @param {string} text - Notification content text
+   * @return Promise
+   */
+  static async updateContent(text) {
+    return await ForegroundServiceModule.updateContent(text);
+  }
+
+  /**
+   * Stop foreground service
+   *
+   * @return Promise
+   */
+  static async stopService() {
+    return await ForegroundServiceModule.stopService();
+  }
 }
-
-

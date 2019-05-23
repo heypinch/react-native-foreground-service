@@ -112,6 +112,11 @@ class NotificationHelper {
         return notificationBuilder.build();
     }
 
+    public void updateNotification(Context context, Bundle notificationConfig) {
+        Notification notification = buildNotification(context, notificationConfig);
+        mNotificationManager.notify((int)notificationConfig.getDouble("id"), notification);
+    }
+
     private Class getMainActivityClass(Context context) {
         String packageName = context.getPackageName();
         Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);

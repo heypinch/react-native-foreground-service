@@ -6,7 +6,9 @@ package com.voximplant.foregroundservice;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Build;
+import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -22,6 +24,7 @@ import static com.voximplant.foregroundservice.Constants.NOTIFICATION_CONFIG;
 public class VIForegroundServiceModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
+    private Intent serviceIntent;
 
     public VIForegroundServiceModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -76,15 +79,36 @@ public class VIForegroundServiceModule extends ReactContextBaseJavaModule {
             return;
         }
 
-        Intent intent = new Intent(getReactApplicationContext(), VIForegroundService.class);
-        intent.setAction(Constants.ACTION_FOREGROUND_SERVICE_START);
-        intent.putExtra(NOTIFICATION_CONFIG, Arguments.toBundle(notificationConfig));
-        ComponentName componentName = getReactApplicationContext().startService(intent);
+        serviceIntent = new Intent(getReactApplicationContext(), VIForegroundService.class);
+        serviceIntent.setAction(Constants.ACTION_FOREGROUND_SERVICE_START);
+        serviceIntent.putExtra(NOTIFICATION_CONFIG, Arguments.toBundle(notificationConfig));
+        ComponentName componentName = getReactApplicationContext().startService(serviceIntent);
         if (componentName != null) {
             promise.resolve(null);
         } else {
             promise.reject(ERROR_SERVICE_ERROR, "VIForegroundService: Foreground service is not started");
         }
+    }
+
+    @ReactMethod
+    public String updateContent(String text, Promise promise) {
+        if (text == null) {
+            promise.reject(ERROR_INVALID_CONFIG, "VIForegroundService: text is required for updating");
+            return "";
+        }
+
+        if (serviceIntent.getExtras() != null && serviceIntent.getExtras().containsKey(NOTIFICATION_CONFIG)) {
+            Bundle notificationConfig = serviceIntent.getExtras().getBundle(NOTIFICATION_CONFIG);
+            if (notificationConfig != null && notificationConfig.containsKey("text")) {
+                notificationConfig.putString("text", text);
+                serviceIntent.putExtra(NOTIFICATION_CONFIG, notificationConfig);
+                NotificationHelper
+                    .getInstance(getReactApplicationContext())
+                    .updateNotification(getReactApplicationContext(), notificationConfig);
+            }
+        }
+
+        return text;
     }
 
     @ReactMethod
