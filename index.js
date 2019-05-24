@@ -14,6 +14,7 @@ const ForegroundServiceModule = NativeModules.VIForegroundService;
  * @property {string} title - Notification title
  * @property {string} text - Notification text
  * @property {string} icon - Small icon name
+ * @property {string} color - Icon color
  * @property {number} [priority] - Priority of this notification. One of:
  *                              0 - PRIORITY_DEFAULT (by default),
  *                              -1 - PRIORITY_LOW,

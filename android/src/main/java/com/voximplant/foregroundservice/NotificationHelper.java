@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.graphics.Color;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
@@ -107,6 +108,10 @@ class NotificationHelper {
         String iconName = notificationConfig.getString("icon");
         if (iconName != null) {
             notificationBuilder.setSmallIcon(getResourceIdForResourceName(context, iconName));
+        }
+
+        if (notificationConfig.containsKey("color")) {
+            notificationBuilder.setColor(Color.parseColor(notificationConfig.getString("color")));
         }
 
         return notificationBuilder.build();
