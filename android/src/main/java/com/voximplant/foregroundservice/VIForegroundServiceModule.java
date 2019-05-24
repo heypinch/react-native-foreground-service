@@ -70,7 +70,7 @@ public class VIForegroundServiceModule extends ReactContextBaseJavaModule {
         }
 
         if (!notificationConfig.hasKey("title")) {
-            promise.reject(ERROR_INVALID_CONFIG, "VIForegroundService: title is reqired");
+            promise.reject(ERROR_INVALID_CONFIG, "VIForegroundService: title is required");
             return;
         }
 
@@ -91,24 +91,34 @@ public class VIForegroundServiceModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public String updateContent(String text, Promise promise) {
-        if (text == null) {
+    public void updateContent(ReadableMap notificationUpdate, Promise promise) {
+        if (notificationUpdate == null) {
+            promise.reject(ERROR_INVALID_CONFIG, "VIForegroundService: Update data not provided");
+            return;
+        }
+        
+        if (!notificationUpdate.hasKey("id")) {
+            promise.reject(ERROR_INVALID_CONFIG, "VIForegroundService: id is required for updating");
+            return;
+        }
+
+        if (!notificationUpdate.hasKey("text")) {
             promise.reject(ERROR_INVALID_CONFIG, "VIForegroundService: text is required for updating");
-            return "";
+            return;
         }
 
         if (serviceIntent.getExtras() != null && serviceIntent.getExtras().containsKey(NOTIFICATION_CONFIG)) {
             Bundle notificationConfig = serviceIntent.getExtras().getBundle(NOTIFICATION_CONFIG);
-            if (notificationConfig != null && notificationConfig.containsKey("text")) {
-                notificationConfig.putString("text", text);
-                serviceIntent.putExtra(NOTIFICATION_CONFIG, notificationConfig);
-                NotificationHelper
-                    .getInstance(getReactApplicationContext())
-                    .updateNotification(getReactApplicationContext(), notificationConfig);
+            if (notificationConfig != null && notificationConfig.containsKey("text") && notificationConfig.containsKey("id")) {
+                if ((int)notificationConfig.getDouble("id") == (int)notificationUpdate.getDouble("id")) {
+                    notificationConfig.putString("text", notificationUpdate.getString("text"));
+                    serviceIntent.putExtra(NOTIFICATION_CONFIG, notificationConfig);
+                    NotificationHelper
+                        .getInstance(getReactApplicationContext())
+                        .updateNotification(getReactApplicationContext(), notificationConfig);
+                }
             }
         }
-
-        return text;
     }
 
     @ReactMethod

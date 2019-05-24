@@ -37,6 +37,12 @@ const NotificationConfig = {};
  */
 const NotificationChannelConfig = {};
 
+/**
+ * @property {number} id - Notification ID
+ * @property {string} name - Notification content text
+ */
+const NotificationUpdate = {};
+
 export default class VIForegroundService {
   /**
    * Create notification channel for foreground service
@@ -61,11 +67,11 @@ export default class VIForegroundService {
 
   /**
    * Update notification content text
-   * @param {string} text - Notification content text
+   * @param {NotificationUpdate} notificationUpdate - Notification update config
    * @return Promise
    */
-  static async updateContent(text) {
-    return await ForegroundServiceModule.updateContent(text);
+  static async updateContent(notificationUpdate) {
+    return await ForegroundServiceModule.updateContent(notificationUpdate);
   }
 
   /**
