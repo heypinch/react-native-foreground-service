@@ -98,7 +98,7 @@ class NotificationHelper {
             notificationBuilder = new NotificationCompat.Builder(context);
         }
 
-        int priority = notificationConfig.containsKey("priority") ? notificationConfig.getInt("priority") : NotificationCompat.PRIORITY_HIGH;
+        int priority = notificationConfig.containsKey("priority") ? (int)notificationConfig.getDouble("priority") : NotificationCompat.PRIORITY_HIGH;
 
         notificationBuilder.setContentTitle(notificationConfig.getString("title"))
                 .setContentText(notificationConfig.getString("text"))
